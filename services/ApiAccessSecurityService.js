@@ -10,14 +10,16 @@ class ApiAccessSecurityService {
     }
 
     securityControls = async (req, res, next) => {
-        if (this.debugMode) {
-            this._setBodyRequestData(req);
-        }
-        
-        const respStatus = await this._checkControls(req);
+        if (req.method !== 'OPTIONS') {
+            if (this.debugMode) {
+                this._setBodyRequestData(req);
+            }
+            
+            const respStatus = await this._checkControls(req);
 
-        if (!this._isResponseStatusOK([respStatus])) {
-            return res.sendStatus(respStatus);
+            if (!this._isResponseStatusOK([respStatus])) {
+                return res.sendStatus(respStatus);
+            }
         }
 
         next();
